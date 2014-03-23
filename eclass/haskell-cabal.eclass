@@ -36,7 +36,7 @@
 #				   not pull upper versions
 #   test-suite --  add support for cabal test-suites (introduced in Cabal-1.8)
 
-inherit eutils ghc-package multilib
+inherit eutils ghc-package multilib multiprocessing
 
 # @ECLASS-VARIABLE: CABAL_EXTRA_CONFIGURE_FLAGS
 # @DESCRIPTION:
@@ -339,6 +339,16 @@ cabal-configure() {
 		cabalconf+=(--ghc-option="$option")
 	done
 
+	# parallel on all available cores
+	if ghc-supports-parallel-make; then
+		local max_jobs=$(makeopts_jobs)
+
+		# limit to sort-of-sane value (same as Cabal)
+		[[ ${max_jobs} -gt 64 ]] && max_jobs=64
+
+		cabalconf+=(--ghc-option=-j"$max_jobs")
+	fi
+
 	# Building GHCi libs on ppc64 causes "TOC overflow".
 	if use ppc64; then
 		cabalconf+=(--disable-library-for-ghci)
@@ -378,6 +388,11 @@ cabal-configure() {
 	# --sysconfdir appeared in Cabal-1.18+
 	if ./setup configure --help | grep -q -- --sysconfdir; then
 		cabalconf+=(--sysconfdir="${EPREFIX}"/etc)
+	fi
+
+	# appeared in Cabal-1.18+ (see '--disable-executable-stripping')
+	if ./setup configure --help | grep -q -- --disable-library-stripping; then
+		cabalconf+=(--disable-library-stripping)
 	fi
 
 	set -- configure \
@@ -656,7 +671,8 @@ cabal_flag() {
 #}
 #
 cabal_chdeps() {
-	local cf=${CABAL_FILE:-${S}/${PN}.cabal}
+	local cabal_fn=${MY_PN:-${PN}}.cabal
+	local cf=${CABAL_FILE:-${S}/${cabal_fn}}
 	local from_ss # ss - substring
 	local to_ss
 	local orig_c # c - contents

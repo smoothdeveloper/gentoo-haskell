@@ -15,7 +15,7 @@ SRC_URI="mirror://hackage/packages/archive/${PN}/${PV}/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0/${PV}"
-KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~ppc64 ~sparc ~x86"
+KEYWORDS="~alpha amd64 ~ia64 ppc ppc64 ~sparc x86"
 IUSE="+closuresignals"
 
 RDEPEND=""
@@ -24,6 +24,7 @@ DEPEND="${RDEPEND}
 	>=dev-haskell/cabal-1.8
 	dev-haskell/happy
 	dev-haskell/random
+	dev-haskell/hashtables
 	>=dev-lang/ghc-6.10.4
 "
 

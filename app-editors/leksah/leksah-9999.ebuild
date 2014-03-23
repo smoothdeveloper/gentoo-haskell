@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,7 +8,7 @@ EAPI=5
 
 CABAL_FEATURES="bin lib profile haddock hoogle hscolour test-suite"
 CABAL_FEATURES+=" nocabaldep" # needs ghc's version as uses leksah-server and ltk linked against ghc's Cabal
-inherit haskell-cabal git-2
+inherit haskell-cabal git-2 pax-utils
 
 DESCRIPTION="Haskell IDE written in Haskell"
 HOMEPAGE="http://www.leksah.org"
@@ -18,7 +18,7 @@ LICENSE="GPL-2"
 SLOT="0/${PV}"
 KEYWORDS=""
 REQUIRED_USE="dyre? ( yi )"
-IUSE="dyre +gtk3 loc webkit yi"
+IUSE="dyre +gtk3 loc +webkit yi"
 # tests fail to compile: confused by gtk2 in slot 2 and gtk2hs upstream using
 # the exact same version numbers for gtk2 on hackage and gtk2 in git.
 # GHCi runtime linker: fatal error: I found a duplicate definition for symbol
@@ -27,86 +27,59 @@ IUSE="dyre +gtk3 loc webkit yi"
 #    /usr/lib64/glib-0.12.4/ghc-7.6.2/HSglib-0.12.4.o
 RESTRICT="test"
 
-RDEPEND="=app-editors/leksah-server-9999*:=[profile?]
-		>=dev-haskell/binary-0.5.0.0:=[profile?]
-		<dev-haskell/binary-0.8:=[profile?]
-		=dev-haskell/binary-shared-0.8*:=[profile?]
-		>=dev-haskell/cabal-1.6.0.1:=[profile?]
-		<dev-haskell/cabal-1.18:=[profile?]
-		>=dev-haskell/enumerator-0.4.14:=[profile?]
-		<dev-haskell/enumerator-0.5:=[profile?]
-		gtk3? (
-			>=dev-haskell/gio-0.12.5.0:0=[profile?]
-			>=dev-haskell/glib-0.12.5.0:0=[profile?]
-			>=dev-haskell/gtk-0.12.5.0:3=[profile?]
-			>=dev-haskell/gtksourceview-0.12.5.0:3=[profile?]
-		)
-		!gtk3? (
-			>=dev-haskell/gio-0.12.2:0=[profile?]
-			>=dev-haskell/glib-0.10:0=[profile?]
-			>=dev-haskell/gtk-0.10:2=[profile?]
-			>=dev-haskell/gtksourceview-0.10.0:2=[profile?]
-		)
-		>=dev-haskell/haskell-src-exts-1.13.5:=[profile?]
-		<dev-haskell/haskell-src-exts-1.15:=[profile?]
-		>=dev-haskell/hlint-1.8.39:=[profile?]
-		<dev-haskell/hlint-1.9:=[profile?]
-		>=dev-haskell/hslogger-1.0.7:=[profile?]
-		<dev-haskell/hslogger-1.3:=[profile?]
-		=dev-haskell/ltk-9999*:=[profile?]
-		>=dev-haskell/missingh-1.1.1.0:=[profile?]
-		<dev-haskell/missingh-1.3:=[profile?]
-		>=dev-haskell/mtl-1.1.0.2:=[profile?]
-		<dev-haskell/mtl-2.2:=[profile?]
-		>=dev-haskell/network-2.2:=[profile?]
-		<dev-haskell/network-3.0:=[profile?]
-		>=dev-haskell/parsec-2.1.0.1:=[profile?]
-		<dev-haskell/parsec-3.2:=[profile?]
-		>dev-haskell/pretty-show-1.5:=[profile?]
-		>=dev-haskell/quickcheck-2.4.2:=[profile?]
-		<dev-haskell/quickcheck-2.7:=[profile?]
-		=dev-haskell/regex-base-0.93*:=[profile?]
-		=dev-haskell/regex-tdfa-1.1*:=[profile?]
-		>=dev-haskell/strict-0.3.2:=[profile?]
-		<dev-haskell/strict-0.4:=[profile?]
-		>=dev-haskell/text-0.11.1.5:=[profile?]
-		<dev-haskell/text-1.2:=[profile?]
-		>=dev-haskell/transformers-0.2.2.0:=[profile?]
-		<dev-haskell/transformers-0.4:=[profile?]
-		>=dev-haskell/utf8-string-0.3.1.1:=[profile?]
-		<dev-haskell/utf8-string-0.4:=[profile?]
-		dev-haskell/vado:=[profile?]
-		dev-haskell/vcsgui:=[profile?]
-		>=dev-haskell/vcswrapper-0.0.1:=[profile?]
-		<dev-haskell/vcswrapper-0.1:=[profile?]
-		>=dev-lang/ghc-6.12.1:=
-		loc? ( dev-haskell/hgettext:=[profile?]
-			dev-haskell/setlocale:=[profile?]
-		)
-		webkit? ( dev-haskell/blaze-html:=[profile?]
+RDEPEND=">=app-editors/leksah-server-0.13.1.0:=[gtk3=,profile?] <app-editors/leksah-server-0.14:=[gtk3=,profile?]
+	>=dev-haskell/binary-0.5.0.0:=[profile?] <dev-haskell/binary-0.8:=[profile?]
+	>=dev-haskell/binary-shared-0.8:=[profile?] <dev-haskell/binary-shared-0.9:=[profile?]
+	>=dev-haskell/cabal-1.6.0.1:=[profile?] <dev-haskell/cabal-1.20:=[profile?]
+	>=dev-haskell/conduit-1.0.8:=[profile?] <dev-haskell/conduit-1.1:=[profile?]
+	>=dev-haskell/executable-path-0.0.3:=[profile?] <dev-haskell/executable-path-0.1:=[profile?]
+	>=dev-haskell/gio-0.12.2:=[profile?] <dev-haskell/gio-0.13:=[profile?]
+	>=dev-haskell/glib-0.10:=[profile?] <dev-haskell/glib-0.13:=[profile?]
+	>=dev-haskell/haskell-src-exts-1.13.5:=[profile?] <dev-haskell/haskell-src-exts-1.15:=[profile?]
+	>=dev-haskell/hlint-1.8.39:=[profile?] <dev-haskell/hlint-1.9:=[profile?]
+	>=dev-haskell/hslogger-1.0.7:=[profile?] <dev-haskell/hslogger-1.3:=[profile?]
+	>=dev-haskell/ltk-0.13.1.0:=[profile?] <dev-haskell/ltk-0.14:=[profile?]
+	>=dev-haskell/mtl-1.1.0.2:=[profile?] <dev-haskell/mtl-2.2:=[profile?]
+	>=dev-haskell/network-2.2:=[profile?] <dev-haskell/network-3.0:=[profile?]
+	>=dev-haskell/parsec-2.1.0.1:=[profile?] <dev-haskell/parsec-3.2:=[profile?]
+	>=dev-haskell/quickcheck-2.4.2:=[profile?] <dev-haskell/quickcheck-2.7:=[profile?]
+	>=dev-haskell/regex-base-0.93:=[profile?] <dev-haskell/regex-base-0.94:=[profile?]
+	>=dev-haskell/regex-tdfa-1.1:=[profile?] <dev-haskell/regex-tdfa-1.3:=[profile?]
+	>=dev-haskell/strict-0.3.2:=[profile?] <dev-haskell/strict-0.4:=[profile?]
+	>=dev-haskell/text-0.11.1.5:=[profile?] <dev-haskell/text-1.2:=[profile?]
+	>=dev-haskell/transformers-0.2.2.0:=[profile?] <dev-haskell/transformers-0.4:=[profile?]
+	>=dev-haskell/utf8-string-0.3.1.1:=[profile?] <dev-haskell/utf8-string-0.4:=[profile?]
+	>=dev-haskell/vado-0.0.1:=[profile?] <dev-haskell/vado-0.1:=[profile?]
+	>=dev-haskell/vcsgui-0.0.1:=[gtk3=,profile?] <dev-haskell/vcsgui-0.1:=[gtk3=,profile?]
+	>=dev-haskell/vcswrapper-0.0.1:=[profile?] <dev-haskell/vcswrapper-0.1:=[profile?]
+	>=dev-lang/ghc-7.4.1:=
+	gtk3? ( >=dev-haskell/gtk-0.12.4:3=[profile?] <dev-haskell/gtk-0.13:3=[profile?]
+		>=dev-haskell/gtksourceview-0.10.0:3=[profile?] <dev-haskell/gtksourceview-0.13:3=[profile?]
+		webkit? ( dev-haskell/webkit:3=[profile?]
+				dev-haskell/webkitgtk-javascriptcore:3=[profile?] ) )
+	!gtk3? ( >=dev-haskell/gtk-0.12.4:2=[profile?] <dev-haskell/gtk-0.13:2=[profile?]
+			dev-haskell/gtk:2=[profile?]
+			>=dev-haskell/gtksourceview-0.10.0:2=[profile?] <dev-haskell/gtksourceview-0.13:2=[profile?]
+			webkit? ( dev-haskell/webkit:2=[profile?]
+				dev-haskell/webkitgtk-javascriptcore:2=[profile?] ) )
+	loc? ( dev-haskell/hgettext:=[profile?]
+		dev-haskell/setlocale:=[profile?] )
+	webkit? ( dev-haskell/blaze-html:=[profile?]
 			dev-haskell/ghcjs-codemirror:=[profile?]
 			dev-haskell/ghcjs-dom:=[profile?]
 			dev-haskell/hamlet:=[profile?]
-			dev-haskell/jsc:=[profile?]
+			dev-haskell/jsaddle:=[profile?]
 			dev-haskell/lens:=[profile?]
-			gtk3? (
-				dev-haskell/webkit:3=[profile?]
-			)
-			!gtk3? (
-				dev-haskell/webkit:2=[profile?]
-			)
-			dev-haskell/webkit-javascriptcore:=[profile?]
-		)
-		yi? ( >=app-editors/yi-0.6.6.1:=[profile?]
-			<app-editors/yi-0.7:=[profile?]
-			dyre? ( >=dev-haskell/dyre-0.8.3:=[profile?]
-			<dev-haskell/dyre-0.9:=[profile?]
-			)
-		)"
+			>=dev-haskell/pretty-show-1.6.3:=[profile?] <dev-haskell/pretty-show-1.7:=[profile?] )
+	yi? ( >=app-editors/yi-0.6.6.1:=[profile?] <app-editors/yi-0.8:=[profile?]
+		dyre? ( >=dev-haskell/dyre-0.8.3:=[profile?] <dev-haskell/dyre-0.9:=[profile?] ) )
+"
 DEPEND="${RDEPEND}
-		>=dev-haskell/cabal-1.10
-		test? ( dev-haskell/monad-loops
-		)"
+	>=dev-haskell/cabal-1.10
+	test? ( dev-haskell/monad-loops
+		!webkit? ( gtk3? ( dev-haskell/webkit:3 )
+				!gtk3? ( dev-haskell/webkit:2 ) ) )
+"
 
 src_prepare() {
 	if has_version "<dev-lang/ghc-7.0.1" && has_version ">=dev-haskell/cabal-1.10.0.0"; then
@@ -120,8 +93,7 @@ src_prepare() {
 			|| die "Could not remove executable bewleksah from ${S}/${PN}.cabal"
 	fi
 	cabal_chdeps \
-		'pretty-show >=1.5 && <1.6' 'pretty-show >=1.5' \
-		'text >= 0.11.1.5 && < 0.12' 'text >= 0.11.1.5 && < 1.2'
+		'yi >=0.6.6.1 && <0.7' 'yi >=0.6.6.1 && <0.8'
 
 	# workaround haddock 2.10.0 error: parse error on input `-- ^ source buffer view'
 	sed -e 's@-- ^@--@g' \
@@ -145,4 +117,11 @@ src_configure() {
 		$(cabal_flag webkit) \
 		$(cabal_flag yi) \
 		--constraint="Cabal == $(cabal-version)"
+}
+
+src_install() {
+	cabal_src_install
+	# leksah uses GHC-api to process TH source.
+	# TH requires GHCi which needs mmap('rwx') (bug #299709)
+	pax-mark m "${D}/usr/bin/${PN}"
 }

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -34,6 +34,8 @@ src_prepare() {
 	sed -e "s@wxdirect@wxdirect-${WX_GTK_VER}@g" \
 		-i "${S}/Setup.hs" \
 		|| die "Could not change Setup.hs for wxdirect slot ${WX_GTK_VER}"
+	cabal_chdeps \
+		'array >= 0.2 && < 0.5' 'array >= 0.2'
 }
 
 src_configure() {

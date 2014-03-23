@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,39 +17,29 @@ EGIT_REPO_URI="https://github.com/leksah/leksah-server.git"
 LICENSE="GPL-2"
 SLOT="0/${PV}"
 KEYWORDS=""
-IUSE="test"
+IUSE="curl +gtk3 libcurl"
 
-RDEPEND=">=dev-haskell/attoparsec-0.10.0.3:=[profile?]
-		<dev-haskell/attoparsec-0.11:=[profile?]
-		=dev-haskell/attoparsec-enumerator-0.3*:=[profile?]
-		>=dev-haskell/binary-0.5.0.0:=[profile?]
-		<dev-haskell/binary-0.8:=[profile?]
-		=dev-haskell/binary-shared-0.8*:=[profile?]
-		>=dev-haskell/cabal-1.6.0.1:=[profile?]
-		<dev-haskell/cabal-1.17:=[profile?]
-		>=dev-haskell/enumerator-0.4.14:=[profile?]
-		<dev-haskell/enumerator-0.5:=[profile?]
-		>=dev-haskell/haddock-2.7.2:=[profile?]
-		<dev-haskell/haddock-2.14:=[profile?]
-		>=dev-haskell/hslogger-1.0.7:=[profile?]
-		<dev-haskell/hslogger-1.3:=[profile?]
-		=dev-haskell/ltk-9999*:=[profile?]
-		>=dev-haskell/network-2.2:=[profile?]
-		<dev-haskell/network-3.0:=[profile?]
-		>=dev-haskell/parsec-2.1.0.1:=[profile?]
-		<dev-haskell/parsec-3.2:=[profile?]
-		>=dev-haskell/process-leksah-1.0.1.3:=[profile?]
-		<dev-haskell/process-leksah-1.1:=[profile?]
-		>=dev-haskell/strict-0.3.2:=[profile?]
-		<dev-haskell/strict-0.4:=[profile?]
-		>=dev-haskell/transformers-0.2.2.0:=[profile?]
-		<dev-haskell/transformers-0.4:=[profile?]
-		>=dev-lang/ghc-6.12.1:="
+RDEPEND=">=dev-haskell/attoparsec-0.10.0.3:=[profile?] <dev-haskell/attoparsec-0.12:=[profile?]
+	>=dev-haskell/attoparsec-conduit-1.0.1.2:=[profile?] <dev-haskell/attoparsec-conduit-1.1:=[profile?]
+	>=dev-haskell/binary-0.5.0.0:=[profile?] <dev-haskell/binary-0.8:=[profile?]
+	>=dev-haskell/binary-shared-0.8:=[profile?] <dev-haskell/binary-shared-0.9:=[profile?]
+	>=dev-haskell/conduit-1.0.8:=[profile?] <dev-haskell/conduit-1.1:=[profile?]
+	>=dev-haskell/executable-path-0.0.3:=[profile?] <dev-haskell/executable-path-0.1:=[profile?]
+	>=dev-haskell/haddock-2.7.2:=[profile?] <dev-haskell/haddock-2.15:=[profile?]
+	>=dev-haskell/hslogger-1.0.7:=[profile?] <dev-haskell/hslogger-1.3:=[profile?]
+	>=dev-haskell/ltk-0.13.1.0:=[gtk3=,profile?] <dev-haskell/ltk-0.14:=[gtk3=,profile?]
+	>=dev-haskell/network-2.2:=[profile?] <dev-haskell/network-3.0:=[profile?]
+	>=dev-haskell/parsec-2.1.0.1:=[profile?] <dev-haskell/parsec-3.2:=[profile?]
+	>=dev-haskell/strict-0.3.2:=[profile?] <dev-haskell/strict-0.4:=[profile?]
+	>=dev-haskell/text-0.11.3.1:=[profile?] <dev-haskell/text-1.2:=[profile?]
+	>=dev-haskell/transformers-0.2.2.0:=[profile?] <dev-haskell/transformers-0.4:=[profile?]
+	>=dev-lang/ghc-7.4.1:=
+	libcurl? ( >=dev-haskell/curl-1.3.5:=[profile?] <dev-haskell/curl-1.4:=[profile?] )
+"
 DEPEND="${RDEPEND}
-		test? (
-			>=dev-haskell/hunit-1.2
-		)
-		>=dev-haskell/cabal-1.10.2"
+	>=dev-haskell/cabal-1.10.2
+	test? ( >=dev-haskell/hunit-1.2 <dev-haskell/hunit-1.3 )
+"
 
 src_prepare() {
 	if has_version "<dev-lang/ghc-7.0.1" && has_version ">=dev-haskell/cabal-1.10.0.0"; then
@@ -70,5 +60,7 @@ src_configure() {
 	fi
 	cabal_src_configure $threaded_flag \
 		$(use_enable test tests) \
+		$(cabal_flag curl curl) \
+		$(cabal_flag libcurl libcurl) \
 		--constraint="Cabal == $(cabal-version)"
 }

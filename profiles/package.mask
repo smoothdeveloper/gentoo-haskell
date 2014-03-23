@@ -1,3 +1,21 @@
+# Alexander Vershilov <qnikst@gentoo.org> (10 Feb 2014)
+# Yesod platform has rules that doesn't play well with
+# gentoo haskell rules, so it's completely unmaintainable.
+# Consider using @yesod-platform set or fix this package.
+dev-haskell/yesod-platform
+
+# Alexander Vershilov <qnikst@gentoo.org> (10 Feb 2014)
+# Masked for removal. Deprecated, use tls instead.
+dev-haskell/tls-extra
+
+# Sergei Trofimovich <slyfox@gentoo.org> (15 Jan 2014)
+# outdated. does not compile against modern hlist
+dev-haskell/nettle-openflow
+
+# Sergei Trofimovich <slyfox@gentoo.org> (13 Jan 2014)
+# outdated. does not compile against modern WAI API
+dev-haskell/wai-logger-prefork
+
 # Sergei Trofimovich <slyfox@gentoo.org> (5 Jan 2014)
 # A bit broken
 www-apps/blogliterately
